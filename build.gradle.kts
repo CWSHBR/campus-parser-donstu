@@ -43,7 +43,7 @@ publishing {
     repositories {
         maven {
             name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/campus-mobile/campus-parser-template")
+            url = uri("https://maven.pkg.github.com/campus-mobile/campus-parser-donstu")
             credentials {
                 username = project.findProperty("gpr.user")?.toString() ?: System.getenv("GPR_USERNAME")
                 password = project.findProperty("gpr.key")?.toString() ?: System.getenv("GPR_TOKEN")

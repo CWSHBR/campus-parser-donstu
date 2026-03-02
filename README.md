@@ -4,12 +4,6 @@
 
 Для настройки шаблона нужно:
 
-1. В `settings.gradle.kts` изменить `rootProject.name` на `campus-parser-<сокращенное имя вуза>`
-2. Изменить пакет `ru.campus.parsers.template` на `ru.campus.parsers.<сокращенное имя вуза>`
-3. Переименовать `TemplateParser` в `<Сокращенное имя вуза>Parser`
-4. Переименовать `TemplateGroupEntitiesCollector` в `<Сокращенное имя вуза>GroupEntitiesCollector`
-5. Переименовать `TemplateGroupScheduleCollector` в `<Сокращенное имя вуза>GroupScheduleCollector`
-6. Изменить в `build.gradle.kts` строку `campus-parser-template` на название репозитория
 7. Убрать `@Ignore` в `DumpParserTest`
 
 ## Setup

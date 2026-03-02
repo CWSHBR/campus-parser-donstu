@@ -18,10 +18,10 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class DonstuAvailableDates(
     @SerialName("minDate")
-    val minDate: String,
+    val minDate: String?,
 
     @SerialName("maxDate")
-    val maxDate: String,
+    val maxDate: String?,
 
     @SerialName("selDate")
     val selectedDate: String,

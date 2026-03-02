@@ -39,9 +39,6 @@ data class DonstuLesson(
     @SerialName("день_недели")
     val weekdayName: String,
 
-    @SerialName("почта")
-    val email: String,
-
     @SerialName("день")
     val dayLabel: String,
 
@@ -53,9 +50,6 @@ data class DonstuLesson(
 
     @SerialName("номерПодгруппы")
     val subgroupNumber: Int,
-
-    @SerialName("часов")
-    val hoursNullable: String?,
 
     @SerialName("дисциплина")
     val discipline: String,
@@ -86,9 +80,6 @@ data class DonstuLesson(
 
     @SerialName("неделяОкончания")
     val endWeek: Int,
-
-    @SerialName("замена")
-    val isReplacement: Boolean,
 
     @SerialName("кодПреподавателя")
     val teacherId: Int,

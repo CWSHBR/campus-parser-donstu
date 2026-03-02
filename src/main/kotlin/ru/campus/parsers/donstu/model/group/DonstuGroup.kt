@@ -6,6 +6,8 @@ package ru.campus.parsers.donstu.model.group
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import ru.campus.parser.sdk.model.Entity
+import ru.campus.parsers.donstu.WEBAPP_BASE_URL
 
 /**
  * Модель для получения информации о группе.
@@ -36,7 +38,18 @@ data class DonstuGroup(
 
     @SerialName("facultyID")
     val facultyId: Int
-)
+){
+    fun toCampusEntity() = Entity(
+        type = Entity.Type.Group,
+        name = groupName,
+        code = groupId.toString(),
+        scheduleUrl = "$WEBAPP_BASE_URL/Rasp/Group/$groupId",
+        extra = Entity.Extra(
+            course = course,
+            faculty = facultyName
+        )
+    )
+}
 
 /**
  * Список групп.

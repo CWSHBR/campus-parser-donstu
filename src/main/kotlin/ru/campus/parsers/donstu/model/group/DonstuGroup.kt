@@ -28,16 +28,16 @@ data class DonstuGroup(
     val groupId: Int,
 
     @SerialName("kurs")
-    val course: Int,
+    val course: Int?,
 
     @SerialName("facul")
-    val facultyName: String,
+    val facultyName: String?,
 
     @SerialName("yearName")
     val academicYearName: String,
 
     @SerialName("facultyID")
-    val facultyId: Int
+    val facultyId: Int?
 ){
     fun toCampusEntity() = Entity(
         type = Entity.Type.Group,
@@ -46,7 +46,7 @@ data class DonstuGroup(
         scheduleUrl = "$WEBAPP_BASE_URL/Rasp/Group/$groupId",
         extra = Entity.Extra(
             course = course,
-            faculty = facultyName
+            faculty = if (facultyName.isNullOrBlank() || facultyName.length < 2) null else facultyName,
         )
     )
 }

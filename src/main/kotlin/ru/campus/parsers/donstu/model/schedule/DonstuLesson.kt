@@ -39,9 +39,6 @@ data class DonstuLesson(
     @SerialName("день_недели")
     val weekdayName: String,
 
-    @SerialName("день")
-    val dayLabel: String,
-
     @SerialName("код_Семестра")
     val semesterCode: Int,
 
@@ -61,7 +58,7 @@ data class DonstuLesson(
     val teacherPosition: String,
 
     @SerialName("аудитория")
-    val room: String,
+    val classroom: String,
 
     @SerialName("учебныйГод")
     val academicYear: String,
@@ -114,5 +111,5 @@ data class DonstuLesson(
     @SerialName("кодВебинара")
     val webinarId: Int?,
 
-)
+    )
 

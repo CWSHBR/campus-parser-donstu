@@ -6,6 +6,7 @@ package ru.campus.parsers.donstu.group
 
 import io.ktor.client.*
 import io.ktor.client.request.*
+import io.ktor.http.HttpStatusCode
 import org.apache.logging.log4j.Logger
 import ru.campus.parser.sdk.base.EntitiesCollector
 import ru.campus.parser.sdk.model.Entity
@@ -19,14 +20,18 @@ class DonstuGroupEntitiesCollector(
     private val logger: Logger,
 ) : EntitiesCollector {
     suspend fun getEduYears(): String {
-        val years: DonstuYearsGroups = httpClient.get("$API_BASE_URL/Rasp/ListYears").getData()
+        val res = httpClient.get("$API_BASE_URL/Rasp/ListYears")
+        if (res.status != HttpStatusCode.OK) error("Years could not be retrieved. Status: ${res.status}")
+        val years: DonstuYearsGroups = res.getData()
         return years.years.lastOrNull() ?: error("No years found.")
     }
 
     suspend fun getDonstuGroups(year: String): DonstuGroups {
-        return httpClient.get("$API_BASE_URL/raspGrouplist") {
+        val res = httpClient.get("$API_BASE_URL/raspGrouplist") {
             parameter("year", year)
-        }.getData()
+        }
+        if (res.status != HttpStatusCode.OK) error("Groups could not be retrieved. Status: ${res.status}")
+        return res.getData()
     }
 
     override suspend fun collectEntities(): List<Entity> {

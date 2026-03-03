@@ -7,6 +7,7 @@ package ru.campus.parsers.donstu
 import io.ktor.client.statement.*
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.isoDayNumber
 import kotlinx.datetime.minus
 import kotlinx.serialization.decodeFromString
@@ -25,7 +26,12 @@ suspend inline fun <reified T> HttpResponse.getData(): T {
 
 fun String.toLocalDate(): LocalDate? = // format: "YYYY-MM-DD"
     runCatching {
-        LocalDate.parse(this)
+        LocalDate.parse(this.take(10))
+    }.getOrNull()
+
+fun String.toLocalDateTime(): LocalDateTime? = // format: "YYYY-MM-DDTHH:MM:SS"
+    runCatching {
+        LocalDateTime.parse(this)
     }.getOrNull()
 
 fun LocalDate.getMondayOfWeek(): LocalDate =

@@ -6,17 +6,14 @@ package ru.campus.parsers.donstu.group
 
 import io.ktor.client.*
 import io.ktor.client.request.*
+import io.ktor.http.*
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.plus
 import org.apache.logging.log4j.Logger
 import ru.campus.parser.sdk.DateProvider
 import ru.campus.parser.sdk.base.ScheduleCollector
-import ru.campus.parser.sdk.model.Entity
-import ru.campus.parser.sdk.model.ExplicitDatePredicate
-import ru.campus.parser.sdk.model.Schedule
-import ru.campus.parser.sdk.model.TimeTableInterval
-import ru.campus.parser.sdk.model.WeekScheduleItem
+import ru.campus.parser.sdk.model.*
 import ru.campus.parsers.donstu.API_BASE_URL
 import ru.campus.parsers.donstu.getData
 import ru.campus.parsers.donstu.getMondayOfWeek
@@ -31,19 +28,22 @@ class DonstuGroupScheduleCollector(
     private val dateProvider: DateProvider,
 ) : ScheduleCollector {
     suspend fun getMaxAvailableDate(groupId: Int): LocalDate {
-        val availableDates: DonstuAvailableDates =
-            httpClient.get("$API_BASE_URL/GetRaspDates"){
-                parameter("idGroup", groupId)
-            }.getData()
+        val res = httpClient.get("$API_BASE_URL/GetRaspDates"){
+            parameter("idGroup", groupId)
+        }
+        if (res.status != HttpStatusCode.OK) error("Max available date could not be retrieved. Status: ${res.status}")
 
+        val availableDates: DonstuAvailableDates = res.getData()
         return availableDates.maxDate?.toLocalDate() ?: error("No max date found for group $groupId")
     }
 
     suspend fun getSchedule(groupId: Int, date: LocalDate): DonstuSchedule {
-        return httpClient.get("$API_BASE_URL/Rasp") {
+        val res = httpClient.get("$API_BASE_URL/Rasp") {
             parameter("idGroup", groupId)
             parameter("sdate", date.toString())
-        }.getData()
+        }
+        if (res.status != HttpStatusCode.OK) error("Schedule could not be retrieved. Status: ${res.status}")
+        return res.getData()
     }
 
 
@@ -92,7 +92,7 @@ class DonstuGroupScheduleCollector(
             subject = subject,
             comment = lesson.custom1,
             type = type,
-            classroom = lesson.classroom,
+            classroom = if (lesson.classroom.isNullOrBlank() || lesson.classroom.length < 2) null else lesson.classroom,
             teachers = processTeachers(lesson),
             links = processLinks(lesson)
         )
@@ -101,11 +101,20 @@ class DonstuGroupScheduleCollector(
     fun processDiscipline(discipline: String): Pair<String, String> {
         val strs = discipline.split(" ", limit = 2)
         if (strs.size == 2) {
-            return strs[0] to strs[1]
+            return convertLessonType(strs[0]) to strs[1]
         } else {
             error("Cannot parse lesson type from discipline: $discipline")
         }
     }
+
+    fun convertLessonType(shortType: String): String =
+        when (shortType) {
+            "пр" -> "Практика"
+            "лек" -> "Лекция"
+            "зач" -> "Зачет"
+            "лаб" -> "Лабораторные"
+            else -> error("Unknown type $shortType")
+        }
 
     fun processTeachers(lesson: DonstuLesson): List<Schedule.Entity> =
         listOf(Schedule.Entity(

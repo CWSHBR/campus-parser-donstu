@@ -18,14 +18,8 @@ data class DonstuLesson(
     @SerialName("дата")
     val date: String,
 
-    @SerialName("датаНачала")
-    val startDateTime: String,
-
-    @SerialName("датаОкончания")
-    val endDateTime: String,
-
     @SerialName("перерыв")
-    val breakInfo: String?,
+    val breakInfo: Double?,
 
     @SerialName("начало")
     val startTime: String,

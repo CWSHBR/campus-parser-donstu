@@ -62,6 +62,7 @@ class DonstuGroupScheduleCollector(
         var date = dateProvider.getCurrentDateTime().date.getMondayOfWeek()
 
         for (i in 0 until 4) {
+            if (date > maxDate) break
             val schedule = getSchedule(groupId, date)
             weekScheduleItems.addAll(
                 schedule.lessons.map { lesson ->
@@ -77,7 +78,6 @@ class DonstuGroupScheduleCollector(
                 }
             )
             date = date.plus(7, DateTimeUnit.DAY)
-            if (date > maxDate) break
         }
 
         return ScheduleCollector.Result(

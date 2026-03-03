@@ -13,15 +13,25 @@ import kotlinx.datetime.minus
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import ru.campus.parsers.donstu.model.DonstuCommonModel
+import org.apache.logging.log4j.Logger
+import java.security.MessageDigest
 
 @PublishedApi
 internal val JsonConfig = Json {
     ignoreUnknownKeys = true
     encodeDefaults = true
+    coerceInputValues = true
+    isLenient = true
 }
 
-suspend inline fun <reified T> HttpResponse.getData(): T {
-    return JsonConfig.decodeFromString<DonstuCommonModel<T>>(this.bodyAsText()).data
+suspend inline fun <reified T> HttpResponse.getData(logger: Logger): T {
+    val bodyText = this.bodyAsText()
+    try {
+        return JsonConfig.decodeFromString<DonstuCommonModel<T>>(bodyText).data
+    } catch (e: Exception) {
+        logger.info("Body was: {}", bodyText)
+        throw e
+    }
 }
 
 fun String.toLocalDate(): LocalDate? = // format: "YYYY-MM-DD"
@@ -36,3 +46,9 @@ fun String.toLocalDateTime(): LocalDateTime? = // format: "YYYY-MM-DDTHH:MM:SS"
 
 fun LocalDate.getMondayOfWeek(): LocalDate =
     this.minus(((this.dayOfWeek.isoDayNumber + 6) % 7), DateTimeUnit.DAY)
+
+private val md = MessageDigest.getInstance("MD5")
+
+fun getMd5Hash(s: String): String {
+    return md.digest(s.toByteArray()).toString(Charsets.UTF_8)
+}

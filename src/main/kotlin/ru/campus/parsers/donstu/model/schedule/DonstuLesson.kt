@@ -19,7 +19,7 @@ data class DonstuLesson(
     val date: String,
 
     @SerialName("перерыв")
-    val breakInfo: Double?,
+    val breakInfo: Double? = null,
 
     @SerialName("начало")
     val startTime: String,
@@ -30,80 +30,38 @@ data class DonstuLesson(
     @SerialName("деньНедели")
     val weekdayIndex: Int,
 
-    @SerialName("день_недели")
-    val weekdayName: String,
-
-    @SerialName("код_Семестра")
-    val semesterCode: Int,
-
     @SerialName("типНедели")
     val weekType: Int,
-
-    @SerialName("номерПодгруппы")
-    val subgroupNumber: Int,
 
     @SerialName("дисциплина")
     val discipline: String,
 
     @SerialName("преподаватель")
-    val teacher: String,
-
-    @SerialName("должность")
-    val teacherPosition: String,
+    val teacher: String = "",
 
     @SerialName("аудитория")
     val classroom: String,
-
-    @SerialName("учебныйГод")
-    val academicYear: String,
 
     @SerialName("группа")
     val groupName: String,
 
     @SerialName("custom1")
-    val custom1: String,
-
-    @SerialName("часы")
-    val timesLabel: String,
-
-    @SerialName("неделяНачала")
-    val startWeek: Int,
-
-    @SerialName("неделяОкончания")
-    val endWeek: Int,
+    val custom1: String = "",
 
     @SerialName("кодПреподавателя")
-    val teacherId: Int,
+    val teacherId: Int? = null,
 
     @SerialName("кодГруппы")
     val groupId: Int,
 
     @SerialName("фиоПреподавателя")
-    val teacherShortName: String,
-
-    @SerialName("кодПользователя")
-    val userId: Int,
-
-    @SerialName("элементЦиклРасписания")
-    val isCycleElement: Boolean,
-
-    @SerialName("элементГрафика")
-    val isGraphElement: Boolean,
-
-    @SerialName("тема")
-    val topic: String?,
+    val teacherShortName: String = "",
 
     @SerialName("номерЗанятия")
     val lessonNumber: Int,
 
     @SerialName("ссылка")
-    val link: String?,
-
-    @SerialName("созданиеВебинара")
-    val webinarCreation: Boolean,
-
-    @SerialName("кодВебинара")
-    val webinarId: Int?,
+    val link: String?
 
     )
 

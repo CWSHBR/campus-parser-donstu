@@ -24,6 +24,16 @@ import ru.campus.parsers.donstu.model.schedule.DonstuLesson
 import ru.campus.parsers.donstu.model.schedule.DonstuSchedule
 import ru.campus.parsers.donstu.toLocalDate
 
+/**
+ * Коллектор расписания для сущности "Группа" для Донского государственного технического университета.
+ *
+ * Получает расписание для группы, начиная с текущей недели, и до 4 недель вперед, или до максимально доступной даты.
+ *
+ * @param httpClient HTTP клиент для выполнения запросов к API.
+ * @param logger логгер для записи информации и ошибок.
+ * @param dateProvider провайдер текущей даты и времени для определения недельного интервала.
+ */
+
 class DonstuGroupScheduleCollector(
     private val httpClient: HttpClient,
     private val logger: Logger,
@@ -32,7 +42,7 @@ class DonstuGroupScheduleCollector(
     suspend fun getMaxAvailableDate(groupId: Int): LocalDate? {
         val res = httpClient.get("$API_BASE_URL/GetRaspDates"){
             parameter("idGroup", groupId)
-            userAgent(USER_AGENT_VALUE)
+            userAgent(USER_AGENT_VALUE) // Юзер-агент нужен, иначе сервер рейт-лимитит
         }
         if (res.status != HttpStatusCode.OK) error("Max available date could not be retrieved. Status: ${res.status}")
 
@@ -44,7 +54,7 @@ class DonstuGroupScheduleCollector(
         val res = httpClient.get("$API_BASE_URL/Rasp") {
             parameter("idGroup", groupId)
             parameter("sdate", date.toString())
-            userAgent(USER_AGENT_VALUE)
+            userAgent(USER_AGENT_VALUE) // Юзер-агент нужен, иначе сервер рейт-лимитит
         }
         if (res.status != HttpStatusCode.OK) error("Schedule could not be retrieved. Status: ${res.status}")
         return res.getData(logger)

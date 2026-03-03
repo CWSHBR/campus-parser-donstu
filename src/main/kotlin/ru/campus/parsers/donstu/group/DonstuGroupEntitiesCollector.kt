@@ -17,6 +17,15 @@ import ru.campus.parsers.donstu.getData
 import ru.campus.parsers.donstu.model.group.DonstuGroups
 import ru.campus.parsers.donstu.model.group.DonstuYearsGroups
 
+/**
+    * Коллектор сущностей "Группа" для Донского государственного технического университета.
+    *
+    * Получает список учебных годов, затем для последнего года получает список групп и преобразует их в сущности.
+    *
+    * @param httpClient HTTP клиент для выполнения запросов к API.
+    * @param logger логгер для записи информации и ошибок.
+ */
+
 class DonstuGroupEntitiesCollector(
     private val httpClient: HttpClient,
     private val logger: Logger,
